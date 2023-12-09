@@ -1,7 +1,7 @@
 const workout_id = JSON.parse(document.getElementById('workout_id').textContent);
 const author_id = JSON.parse(document.getElementById('user_id').textContent);
 
-const workoutSocket = new WebSocket(// wss для деплоя на Ngrok, для locakhost ws
+const workoutSocket = new WebSocket(
     'wss://'
     + window.location.host
     + '/ws/workout_chat/'

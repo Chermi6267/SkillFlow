@@ -11,7 +11,7 @@ cancelButtonElement.addEventListener("click", function () {
 });
 
 
-const commentSocket = new WebSocket(// wss для деплоя на Ngrok, для locakhost ws
+const commentSocket = new WebSocket(
     'wss://'
     + window.location.host
     + '/ws/comment_chat/'

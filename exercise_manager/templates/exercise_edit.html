@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+Редактировать-{{ exercise.name }}
+{% endblock %}
+
+{% block content %}
+<main class="site-main">
+    <div class="forma-cont">
+        <form class="ex_forma" method="post" id="add_exercise" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.startPositionImage }}
+            <button id="chooseFileBtn1" class="preview-input-btn createEx" type="button">
+                <img src="{% static 'svg/fileUploaded.svg' %}" alt="">
+                <h1 class="preview-input-text">Начальное положение</h1>
+            </button>
+            {{ form.finalPositionImage }}
+            <button id="chooseFileBtn2" class="preview-input-btn createEx" type="button">
+                <img src="{% static 'svg/fileUploaded.svg' %}" alt="">
+                <h1 class="preview-input-text">Финальное положение</h1>
+            </button>
+            <div class="input-label">
+                {{ form.name }}
+                <label for="id_name">Название</label>
+            </div>
+            <div class="input-label">
+                {{ form.description }}
+                <label for="id_description">Описание</label>
+            </div>
+            <button id="sub" type="submit" hidden></button>
+        </form>
+        <div class="open-creat-div_btn">
+            <button id="forma-sub" class="open-creat" type="button">
+                Сохранить
+            </button>
+        </div>
+    </div>
+    <div>
+        {% if messages %}
+            {% for m in messages %}
+                {{ m }}
+            {% endfor %}
+        {% endif %}
+    </div>
+</main>
+<script>
+    document.getElementById('chooseFileBtn1').addEventListener('click', function () {
+        document.getElementById('id_preview1').click();
+    });
+    document.getElementById('chooseFileBtn2').addEventListener('click', function () {
+        document.getElementById('id_preview2').click();
+    });
+</script>
+<script>
+    document.getElementById("forma-sub").addEventListener('click', function () {
+        document.getElementById("sub").click();
+    });
+</script>
+<script>
+    // Функция для изменения изображения при загрузке страницы
+    function checkFileOnLoad(inputId, buttonId) {
+        var input = document.getElementById(inputId);
+        var button = document.getElementById(buttonId);
+
+        if (input.files && input.files[0]) {
+            // Если файл уже загружен, изменяем src у изображения внутри кнопки
+            button.getElementsByTagName('img')[0].src = "{% static 'svg/fileUploaded.svg' %}";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        checkFileOnLoad('id_preview1', 'chooseFileBtn1');
+        checkFileOnLoad('id_preview2', 'chooseFileBtn2');
+    });
+
+    // Функция, которая будет вызываться при изменении файла в инпуте
+    function handleFileChange(inputId, buttonId) {
+        var input = document.getElementById(inputId);
+        var button = document.getElementById(buttonId);
+
+        if (input.files && input.files[0]) {
+            // Если файл загружен, изменяем src у изображения внутри кнопки
+            button.getElementsByTagName('img')[0].src = "{% static 'svg/fileUploaded.svg' %}";
+        }
+    }
+</script>
+{% endblock %}

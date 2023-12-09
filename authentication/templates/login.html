@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+Войти в аккаунт
+{% endblock %}
+
+{% block content %}
+<main class="site-main">
+    <div class="profile-forma-cont">
+        <form method="POST" class="profile-forma">
+            <h1 class="auth-h1">Войти в аккаунт</h1>
+            {% csrf_token %}
+            <input class="forms" type="text" name="username" placeholder="Username">
+            <input autocomplete="on" class="forms password" type="password" name="password" placeholder="Password" id="id_password1">
+            <div class="show_psw_cont">
+                <input id="password_show" type="checkbox"><label for="password_show">Показать пароль</label>
+            </div>
+            <button class="open-creat" type="submit">Войти</button>
+            {% if messages %}
+            {% for message in messages %}
+            <h1>{{message}}</h1>
+            {% endfor %}
+            {% endif %}
+            <h1>Нет аккаунта? <a href="{% url 'registration' %}">Зарегистрируйтесь</a></h1>
+            <h1><a href="{% url 'password_reset' %}">Забыли пароль?</a></h1>
+        </form>
+    </div>
+</main>
+<script>
+    toggle = document.getElementById('password_show')
+    toggle.addEventListener('change', function(){
+        psw_input = document.getElementById("id_password1")
+        if (toggle.checked) {
+            psw_input.type = 'text'
+        } else {
+            psw_input.type = 'password'
+        }
+    });
+</script>
+{% endblock %}

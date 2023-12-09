@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+{{ user.username }}|Создать
+{% endblock %}
+
+{% block content %}
+<main class="site-main">
+    <h1 class="motivation-fraze creat-motivation-fraze">
+        Тренировки создают знания и силу - передай их дальше
+    </h1>
+    <form id='tr-cr-container' class="tr-cr-container" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="creat-workout">
+            <div class="left-cr-workout">
+                {{ form.preview }}
+                <button id="chooseFileBtn" class="preview-input-btn" type="button">
+                    <img src="{% static 'svg/fileUpload.svg' %}" alt="">
+                </button>
+                <div class="tr-level">
+                    <h1>Уровень: </h1>
+                    {{ form.level }}
+                </div>
+            </div>
+            <div class="right-cr-workout">
+                {{ form.name }}
+                {{ form.overview }}
+                {{ form.detailed_description }}
+            </div>
+        </div>
+        <div class="tr-cr-btns">
+            <button id="cansel-tr-cr-btn" class="tr-btn cansel" type="reset">
+                Отмена
+            </button>
+            <button class="tr-btn add" type="submit">
+                Добавить тренировку
+            </button>
+        </div>
+    </form>
+    <div class="open-creat-div_btn">
+        <button id="domain-expansion" class="open-creat" type="button">
+            Добавить тренировку
+        </button>
+    </div>
+    <!--ИСПОЛЬЗУЮ КЛАССЫ ДЛЯ УПРАЖНЕНИЙ-->
+    {% if workout %}
+    {% if workout|length == 1 %}
+    <div class="ex-container">
+        <div class="ex-img">
+            <img class="start_img" src="/media/{{ workout.get.preview }}" alt="">
+        </div>
+        <div class="name-text">
+            <div class="ex-name">
+                <h1>
+                    {{ workout.get.name }}
+                </h1>
+            </div>
+            <div class="ex-text">
+                <h1>
+                    {{ workout.get.overview }}
+                </h1>
+            </div>
+            <div class="control-btns">
+                <form action="{% url 'exercises_create' workout_number=workout.get.id %}">
+                    <button>
+                        <img src="{% static 'svg/edit.svg' %}" alt="Редактировать">
+                    </button>
+                </form>
+                <form action="{% url 'training_delete' workout_id=workout.get.id %}">
+                    <button>
+                        <img src="{% static 'svg/delete.svg' %}" alt="Удалить">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    {% for w in workout %}
+    <div class="ex-container">
+        <div class="ex-img">
+            <img class="start_img" src="/media/{{ w.preview }}" alt="">
+        </div>
+        <div class="name-text">
+            <div class="ex-name">
+                <h1>
+                    {{ w.name }}
+                </h1>
+            </div>
+            <div class="ex-text">
+                <h1>
+                    {{ w.overview }}
+                </h1>
+            </div>
+            <div class="control-btns">
+                <form action="{% url 'exercises_create' workout_number=w.id %}">
+                    <button>
+                        <img src="{% static 'svg/edit.svg' %}" alt="Редактировать">
+                    </button>
+                </form>
+                <form action="{% url 'training_delete' workout_id=w.id %}">
+                    <button>
+                        <img src="{% static 'svg/delete.svg' %}" alt="Удалить">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% else %}
+    <h1>Здесь пока что пусто, но тебе под силу это исправить</h1>
+    {% endif %}
+
+    {% if messages %}
+    {% for message in messages %}
+    <h1>{{message}}</h1>
+    {% endfor %}
+    {% endif %}
+</main>
+<script>
+    document.getElementById('chooseFileBtn').addEventListener('click', function () {
+        document.getElementById('id_preview').click();
+    });
+</script>
+<script>
+    const domainExpantion = document.getElementById('domain-expansion')
+    const form = document.getElementById('tr-cr-container')
+    var isOpen = 0
+    domainExpantion.addEventListener('click', function () {
+        if (isOpen == 0) {
+            domainExpantion.style.display = 'none';
+            form.style.display = 'grid';
+            form.style.height = 'auto';
+            form.classList.add('creat-workout-animation');
+            isOpen = 1
+        };
+
+        const canselBtn = document.getElementById('cansel-tr-cr-btn');
+        canselBtn.addEventListener('click', function () {
+            domainExpantion.style.display = 'block';
+            form.style.display = 'none';
+            form.style.height = '0';
+            form.classList.remove('creat-workout-animation');
+            isOpen = 0
+        });
+    });
+</script>
+<script>
+    function handleFileChange(inputId, buttonId) {
+        var input = document.getElementById(inputId);
+        var button = document.getElementById(buttonId);
+
+        if (input.files && input.files[0]) {
+            button.getElementsByTagName('img')[0].src = "{% static 'svg/fileUploaded.svg' %}";
+        }
+    }
+</script>
+{% endblock %}

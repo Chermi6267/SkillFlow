@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+Профиль - {{ user.username }}
+{% endblock %}
+
+{% block content %}
+<main class="site-main">
+    <div class="profile-forma-cont">
+        <form class="profile-forma" method="POST" enctype="multipart/form-data" id="avatar-form">
+            <h1 class="auth-h1">{{ user.username }}</h1>
+            {% csrf_token %}
+            <div class="ava_cont">
+                <div class="ava_img_cont">
+                    <button class="ava_btn" id="chooseFileBtn"  type="button">
+                        <img class="ava_img" src="{{ user_avatar }}" alt="">
+                    </button>
+                </div> 
+            </div>
+            {{ form.avatar }}
+            {{ form.first_name }}
+            {{ form.last_name }}
+            {{ form.phone_number }}
+
+            <div class="open-creat-div_btn">
+                <button class="open-creat" type="submit">Сохранить</button>
+            </div>
+        </form>
+        {% if form.user_cat.value == 'T' %}
+            <form action="{% url 'training_create' %}"><button class="open-creat yours_trainings" type="submit">Ваши тренировки</button></form>
+        {% endif %}
+        <form id="logoutForm" action="{% url 'logout' %}"><button class="open-creat logout-btn" type="submit">Выйти</button></form>
+    </div>
+</main>
+<script src="{% static 'js/change_avatar.js' %}"></script>
+<script src="{% static 'js/avatar_auto_save.js' %}"></script>
+{% endblock %}

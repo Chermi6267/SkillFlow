@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+Все тренировки
+{% endblock %}
+
+{% block content %}
+<h1 class="motivation-fraze">
+    ЛЮБЫЕ ТРЕНИРОВКИ ПОД ТВОИ ЗАДАЧИ
+</h1>
+<main class="site-main">
+    <div class="control-menu">
+        <div class="finder">
+            <form class="search" action="">
+                <input class="search-input" type="text">
+                <button type="submit" onclick="alert('Автору пока лень это делать ヾ(•ω•`)o')">
+                    <img class="finder-icon" src="{% static 'svg/search.svg' %}" alt="Найти">
+                </button>
+            </form>
+            <a class="sort" href="#" onclick="alert('Автору пока лень это делать ヾ(•ω•`)o')">
+                <h1>Сортировка</h1>
+                <img src="{% static 'svg/extension.svg' %}" alt="*">
+            </a>
+        </div>
+        <div class="display-mode">
+            <button class="ds-btn" onclick="alert('Автору пока лень это делать ヾ(•ω•`)o')">
+                <img src="{% static 'svg/block.svg' %}" alt="Блоками">
+            </button>
+            <button class="ds-btn" onclick="alert('Автору пока лень это делать ヾ(•ω•`)o')">
+                <img src="{% static 'svg/line.svg' %}" alt="Линейно">
+            </button>
+        </div>
+    </div>
+    <div class="tr-list">
+        {% for w in page_obj %}
+        <a class="tr-a" href="{% url 'certain_training' workout_number=w.id %}">
+            <div class="tr-obj">
+                <img src="/media/{{ w.preview }}">
+                <div>
+                    <div class="tr-name-static">
+                        <h1 class="tr-name">{{ w.name }}</h1>
+                        <div class="tr-statistics">
+                            <div class="st-like all">
+                                <img src="{% static 'svg/like.svg' %}" alt="Likes">
+                                <h2>{{ w.likes.count }}</h2>
+                            </div>
+                            <div class="st-view all">
+                                <img src="{% static 'svg/view.svg' %}" alt="Likes">
+                                <h2>{{ w.number_of_views.count }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="tr-overview">{{ w.overview }}</h2>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

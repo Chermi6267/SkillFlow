@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+Добавить упражнения-{{ workout.name }}
+{% endblock %}
+
+{% block content %}
+<main class="site-main">
+    {% if exercises %}
+    {% if exercises|length == 1 %}
+    <div class="ex-container">
+        <div class="img-btn-container">
+            <div class="ex-img">
+                <img class="start_img" src="/media/{{ exercises.get.startPositionImage }}" alt="">
+                <img class="final_img" src="/media/{{ exercises.get.finalPositionImage }}" alt="">
+                <button class="prev"><img class="prev_btn_img" src="{% static 'svg/arrow.svg' %}" alt="prev"></button>
+                <button class="next"><img class="next_btn_img" src="{% static 'svg/arrow.svg' %}" alt="next"></button>
+            </div>
+        </div>
+        <div class="name-text">
+            <div class="ex-name">
+                <h1>
+                    {{ exercises.get.name }}
+                </h1>
+            </div>
+            <div class="ex-text">
+                <h1>
+                    {{ exercises.get.description }}
+                </h1>
+            </div>
+            <div class="control-btns">
+                <form action="{% url 'exercise_edit' workout_id=workout.id exercise_id=exercises.get.id %}">
+                    <button>
+                        <img src="{% static 'svg/edit.svg' %}" alt="Редактировать">
+                    </button>
+                </form>
+                <form action="{% url 'exercise_delete' workout_id=workout.id exercise_id=exercises.get.id %}">
+                    <button>
+                        <img src="{% static 'svg/delete.svg' %}" alt="Удалить">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    {% for ex in exercises %}
+    <div class="ex-container">
+        <div class="img-btn-container">
+            <div class="ex-img">
+                <img class="start_img" src="/media/{{ ex.startPositionImage }}" alt="">
+                <img class="final_img" src="/media/{{ ex.finalPositionImage }}" alt="">
+                <button class="prev"><img class="prev_btn_img" src="{% static 'svg/arrow.svg' %}" alt="prev"></button>
+                <button class="next"><img class="next_btn_img" src="{% static 'svg/arrow.svg' %}" alt="next"></button>
+            </div>
+        </div>
+        <div class="name-text">
+            <div class="ex-name">
+                <h1>
+                    {{ ex.name }}
+                </h1>
+            </div>
+            <div class="ex-text">
+                <h1>
+                    {{ ex.description }}
+                </h1>
+            </div>
+            <div class="control-btns">
+                <form action="{% url 'exercise_edit' workout_id=workout.id exercise_id=ex.id %}">
+                    <button>
+                        <img src="{% static 'svg/edit.svg' %}" alt="Редактировать">
+                    </button>
+                </form>
+                <form action="{% url 'exercise_delete' workout_id=workout.id exercise_id=ex.id %}">
+                    <button>
+                        <img src="{% static 'svg/delete.svg' %}" alt="Удалить">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% else %}
+    Здесь пока что пусто, но вам по силам это исправить
+    {% endif %}
+    <div class="forma-cont">
+        <form class="ex_forma" method="post" id="add_exercise" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.startPositionImage }}
+            <button id="chooseFileBtn1" class="preview-input-btn createEx" type="button">
+                <img src="{% static 'svg/fileUpload.svg' %}" alt="">
+                <h1 class="preview-input-text">Начальное положение</h1>
+            </button>
+            {{ form.finalPositionImage }}
+            <button id="chooseFileBtn2" class="preview-input-btn createEx" type="button">
+                <img src="{% static 'svg/fileUpload.svg' %}" alt="">
+                <h1 class="preview-input-text">Финальное положение</h1>
+            </button>
+            <div class="input-label">
+                {{ form.name }}
+                <label for="id_name">Название</label>
+            </div>
+            <div class="input-label">
+                {{ form.description }}
+                <label for="id_description">Описание</label>
+            </div>
+            <button id="sub" type="submit" hidden></button>
+        </form>
+        <div class="open-creat-div_btn">
+            <button id="forma-sub" class="open-creat" type="button">
+                Добавить упражнение
+            </button>
+        </div>
+    </div>
+    <div>
+        {% if messages %}
+            {% for m in messages %}
+                {{ m }}
+            {% endfor %}
+        {% endif %}
+    </div>
+</main>
+<script>
+    document.getElementById('chooseFileBtn1').addEventListener('click', function () {
+        document.getElementById('id_preview1').click();
+    });
+    document.getElementById('chooseFileBtn2').addEventListener('click', function () {
+        document.getElementById('id_preview2').click();
+    });
+</script>
+<script>
+    document.getElementById("forma-sub").addEventListener('click', function () {
+        document.getElementById("sub").click();
+    });
+</script>
+<script>
+    function handleFileChange(inputId, buttonId) {
+        var input = document.getElementById(inputId);
+        var button = document.getElementById(buttonId);
+
+        if (input.files && input.files[0]) {
+            button.getElementsByTagName('img')[0].src = "{% static 'svg/fileUploaded.svg' %}";
+        }
+    }
+</script>
+<script src="{% static 'js/exImageScroller.js' %}"></script>
+{% endblock %}

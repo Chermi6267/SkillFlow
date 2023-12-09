@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<main class="site-main">
+    <div style="display: flex; column-gap: 50px; border: 2px solid #D6D6D6; padding: 15px;align-items: center;">
+        <img style="width: 250px; height: 500px;" src="{% static 'img/Iam.jpg' %}" alt="">
+        <h1 style="font-size: 15pt;">
+            Данный сайт написан для изучения основного функционала и технологий фреймворка Django<br>
+            Автор: Черников Виктор Михайлович 10 класс<br>
+            Дата начала: 01.07.2023<br>
+            Дата окончания: 03.12.2023<br>
+        </h1>
+    </div>
+</main>
+{% endblock %}

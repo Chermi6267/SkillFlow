@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+Тренировка-{{ workout.name }}
+{% endblock %}
+
+{% block content %}
+
+<main class="site-main">
+    <div class="training-about">
+        <div class="tr-left">
+            <div class="tr-img">
+                <img src="/media/{{ workout.preview }}" alt="{{ workout.name }}">
+            </div>
+            <div class="tr-under-img">
+                <div class="tr-name">
+                    <h1>
+                        {{ workout.name }}
+                    </h1>
+                </div>
+                <div class="tr-statistics">
+                    <div class="st-like">
+                        {% if is_workout_liked %}
+                        <button class="workout-like" id="workoutLikeButton" data_workout_id="{{ workout.id }}">
+                            <img src="{% static 'svg/liked.svg' %}" alt="Likes">
+                        </button>
+                        {% else %}
+                        <button class="workout-like" id="workoutLikeButton" data_workout_id="{{ workout.id }}">
+                            <img src="{% static 'svg/like.svg' %}" alt="Likes">
+                        </button>
+                        {% endif %}
+                        <h2 id="workoutLikes">{{ workout.likes.count }}</h2>
+                    </div>
+                    <div class="st-view">
+                        <img src="{% static 'svg/view.svg' %}" alt="Views">
+                        <h2 id="views">{{ workout.number_of_views.count }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tr-right">
+            <div class="tr-author">
+                <div class="author-img">
+                    <img class="author-ava" src="{{ author.avatar.url }}" alt="">
+                </div>
+                <div class="author-name">
+                    <h1>
+                        {% if author.first_name == '' %}
+                            {{workout.author}}
+                        {% else %}
+                        {{ author.first_name }} {{ author.last_name }}
+                        {% endif %}
+                    </h1>
+                </div>
+            </div>
+            <div class="tr-text">
+                <h2>
+                    {{ workout.detailed_description }}
+                </h2>
+            </div>
+            <div class="tr-level-number">
+                {% if workout.level == 'H' %}
+                <h1>
+                    Уровень: Hard
+                </h1>
+                {% elif workout.level == 'M' %}
+                <h1>
+                    Уровень: Medium
+                </h1>
+                {% else %}
+                <h1>
+                    Уровень: Easy
+                </h1>
+                {% endif %}
+                <h1>
+                    Количество упражнений: {{ exercises.count }}
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="exercises">
+        {% for ex in exercises %}
+        <div class="ex-container">
+            <div class="img-btn-container">
+                <div class="ex-img">
+                    <img class="start_img" src="/media/{{ ex.startPositionImage }}" alt="">
+                    <img class="final_img" src="/media/{{ ex.finalPositionImage }}" alt="">
+                    <button class="prev"><img class="prev_btn_img" src="{% static 'svg/arrow.svg' %}"
+                            alt="prev"></button>
+                    <button class="next"><img class="next_btn_img" src="{% static 'svg/arrow.svg' %}"
+                            alt="next"></button>
+                </div>
+            </div>
+            <div class="name-text">
+                <div class="ex-name">
+                    <h1>
+                        {{ ex.name }}
+                    </h1>
+                </div>
+                <div class="ex-text">
+                    <h1>
+                        {{ ex.description }}
+                    </h1>
+                </div>
+            </div> 
+        </div>
+        {% endfor %}
+    </div>
+    <div>
+        <form class="send-comment" name="comment_form" id="comment_form">
+            {% csrf_token %}
+            <div class="comment-input">
+                <input id="comment-input" name="text" type="text" placeholder="Оставить комментарий" autocomplete="off">
+            </div>
+            <div class="cansel-save">
+                <button class="comment-cansel" type="reset">
+                    Отмена
+                </button>
+                <button id="comment-submit" class="comment-save" type="button" name="commentFormButton">
+                    Сохранить
+                </button>
+            </div>
+        </form>
+    </div>
+    <div id="all_comments">
+        {% for comment in comments %}
+        <div class="comment">
+            <div class="comment-autor-crAt">
+                <h1 class="comment-author">{{ comment.author }}</h1>
+                <h1 class="comment-date">{{ comment.created_at|naturaltime }}</h1>
+            </div>
+            <div class="comment-text">
+                {{ comment.text }}
+            </div>
+            <div class="comment-like">
+                <h1 id="{{ comment.id }}" class="like-count">
+                    {{ comment.likes.count }}
+                </h1>
+                {% for key, value in is_comment_liked.items %}
+                {% if key == comment.id %}
+                {% if value %}
+                <button class="commentLikeButton" data_comment_id="{{ comment.id }}">
+                    <img class="" src="{% static 'svg/liked.svg' %}" alt="Likes">
+                </button>
+                {% else %}
+                <button class="commentLikeButton" data_comment_id="{{ comment.id }}">
+                    <img class="" src="{% static 'svg/like.svg' %}" alt="Likes">
+                </button>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+{{ workout.id|json_script:"workout_id" }}
+{{ user.id|json_script:"user_id" }}
+<script src="{% static 'js/workoutWBSocket.js' %}"></script>
+<script src="{% static 'js/commentWBSocket.js' %}"></script>
+<script src="{% static 'js/exImageScroller.js' %}"></script>
+{% endblock %}

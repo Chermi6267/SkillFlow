@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+Регистрация
+{% endblock %}
+
+{% block content %}
+<main class="site-main">
+    <div class="profile-forma-cont">
+        <form method="post" class="profile-forma">
+            <h1 class="auth-h1">Регистрация</h1>
+            {% csrf_token %}
+            {{ form.username }}
+            {{ form.email }}
+            {{ form.password1 }}
+            {{ form.password2 }}
+            {{ form2.user_cat }}
+            <div class="show_psw_cont">
+                <input id="password_show" type="checkbox"><label for="password_show">Показать пароль</label>
+            </div>
+            <button class="open-creat" type="submit">Создать аккаунт</button>
+            {% for field in form %}
+            {% if field.errors %}
+            {% for error in field.errors %}
+            {% if field.name == 'username' %}
+            <h1>Имя пользователя уже занято</h1>
+            {% elif field.name == 'email' %}
+            <h1>Некорректный адрес электронной почты</h1>
+            {% else %}
+            {% if error == 'This password is too common.' %}
+            <h1>Этот пароль слишком распространен.</h1>
+            {% elif error == 'This password is entirely numeric.' %}
+            <h1>Этот пароль полностью цифровой.</h1>
+            {% elif error == 'This password is too short. It must contain at least 8 characters.' %}
+            <h1>Этот пароль слишком короткий. Он должен содержать не менее 8 символов.</h1>
+            {% else %}
+            <h1>Два поля пароля не совпадают.</h1>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
+            <h1>У вас есть аккаунт? <a href="{% url 'login' %}">Войдите</a></h1>
+        </form>
+    </div>
+
+</main>
+<script>
+    toggle = document.getElementById('password_show')
+    toggle.addEventListener('change', function(){
+        psw_input = document.getElementById("id_password1")
+        if (toggle.checked) {
+            psw_input.type = 'text'
+        } else {
+            psw_input.type = 'password'
+        }
+    });
+</script>
+{% endblock %}

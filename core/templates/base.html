@@ -1,0 +1,56 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'svg/eye-fill.svg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/light.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;800&display=swap" rel="stylesheet">
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+</head>
+
+<div class="wrapper">
+    <div class="container">
+        <header class="site-header">
+            <div class="header-logo">
+                <a href="{% url 'mainPage' %}">
+                    <img class="logo-image" src="{% static 'svg/logo.svg' %}" alt="Skill Flow">
+                </a>
+            </div>
+
+            <ul class="center-header-list">
+                <li class="header-item">
+                    <a class="header-item-a" href="{% url 'trainings' %}">Тренировки</a>
+                </li>
+                <li class="header-item">
+                    <div><a class="header-item-a" href="{% url 'aboutUs' %}">О нас</a></div>
+                </li>
+            </ul>
+            <ul class="right-header-list">
+                {% if user.is_authenticated %}
+                <li class="header_item">
+                    <div><a class="header-item-a" href="{% url 'profile' %}">{{ user.username }}</a></div>
+                </li>
+                {% else %}
+                <li class="header-item">
+                    <div><a class="header-item-a" href="{% url 'login' %}">Войти</a></div>
+                </li>
+                {% endif %}
+            </ul>
+        </header>
+        {% block content %}
+        {% endblock %}
+    </div>
+</div>
+
+</html>
